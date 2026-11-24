@@ -1,0 +1,29 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+
+# 构建产物（FileSender-EXE/ 里的发布 exe 用否定规则放行）
+build/
+dist/
+build-env/
+*.spec
+*.exe
+!FileSender-EXE/*.exe
+.pi-work/
+
+# 运行时生成（不进仓库）
+config.json
+config.json.bad-*
+logs/
+发送清单/
+*.log
+keyring_test.txt
+selftest_report.txt
+ui_test_env/
+
+# IDE / 系统
+.vscode/
+.idea/
+Thumbs.db
+.DS_Store

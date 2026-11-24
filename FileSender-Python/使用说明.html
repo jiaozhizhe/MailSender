@@ -1,0 +1,315 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>邮件分发助手使用说明</title>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { min-height: 100%; }
+body {
+  position: relative;
+  font-family: -apple-system, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Segoe UI", "Noto Sans SC", sans-serif;
+  color: #1f2d3d;
+  line-height: 1.7;
+  -webkit-font-smoothing: antialiased;
+  max-width: 820px;
+  margin: 0 auto;
+  padding: 40px 24px;
+  background: linear-gradient(160deg, #f8fafc 0%, #ffffff 45%, #cfe0f5 100%);
+  min-height: 100vh;
+}
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse 45% 35% at 18% 8%, rgba(255,255,255,0.55) 0%, transparent 60%),
+    radial-gradient(ellipse 40% 30% at 88% 90%, rgba(255,255,255,0.45) 0%, transparent 55%);
+}
+body > * { position: relative; z-index: 1; }
+.title {
+  position: relative;
+  overflow: hidden;
+  padding: 56px 40px;
+  text-align: center;
+  background: linear-gradient(135deg, #1e3a5f 0%, #3b82f6 50%, #4f8ef7 100%);
+  color: #ffffff;
+  border-radius: 16px;
+  margin-bottom: 24px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.12);
+}
+.title::before {
+  content: '';
+  position: absolute; inset: 0;
+  background:
+    radial-gradient(ellipse 70% 55% at 18% 82%, rgba(255,255,255,0.12) 0%, transparent 60%),
+    radial-gradient(ellipse 55% 40% at 82% 18%, rgba(255,255,255,0.08) 0%, transparent 55%);
+  pointer-events: none;
+}
+.title > * { position: relative; z-index: 1; }
+.title h1 { font-size: 28px; font-weight: 800; margin: 0 0 14px 0; letter-spacing: 1px; color: #ffffff; }
+.title .accent-line { width: 48px; height: 3px; background: rgba(255,255,255,0.85); margin: 0 auto 18px; border-radius: 2px; }
+.title p { font-size: 15px; color: rgba(255,255,255,0.85); margin: 0; line-height: 1.7; }
+h1.heading {
+  font-size: 28px;
+  color: #0f1e33;
+  margin: 36px 0 16px 0;
+  font-weight: 700;
+  border-left: 4px solid #3b82f6;
+  padding-left: 16px;
+}
+h2.heading {
+  font-size: 22px;
+  color: #0f1e33;
+  margin: 28px 0 12px;
+  padding-bottom: 8px;
+  border-bottom: 2px solid #c9d6f3;
+  font-weight: 600;
+}
+.paragraph { font-size: 15px; color: #1f2d3d; line-height: 1.8; margin: 0 0 16px 0; }
+.list { margin: 0 0 16px 0; padding-left: 24px; font-size: 15px; color: #1f2d3d; line-height: 1.8; }
+.list li { margin-bottom: 8px; }
+.list li::marker { color: #3b82f6; }
+.callout {
+  margin: 0 0 16px 0;
+  padding: 16px 24px;
+  background: #e8f0fe;
+  border-left: 4px solid #3b82f6;
+  border-radius: 8px;
+}
+.callout[data-variant="warning"] { background: #FFF3E0; border-left-color: #d97706; }
+.callout[data-variant="tip"] { background: #E8F5E9; border-left-color: #2E7D32; }
+.callout p { font-size: 15px; color: #1f2d3d; margin: 0; line-height: 1.8; }
+.card {
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+  padding: 24px;
+  margin: 0 0 16px 0;
+}
+.card h3 { font-size: 17px; color: #0f1e33; margin: 0 0 10px 0; }
+.timeline { list-style: none; padding: 0; margin: 0 0 16px 0; }
+.timeline li {
+  position: relative;
+  padding-left: 28px;
+  padding-bottom: 18px;
+  border-left: 2px solid #e8f0fe;
+  margin-left: 6px;
+}
+.timeline li:last-child { border-left-color: transparent; padding-bottom: 0; }
+.timeline li::before {
+  content: '';
+  position: absolute;
+  left: -7px; top: 5px;
+  width: 12px; height: 12px;
+  border-radius: 50%;
+  background: #3b82f6;
+  border: 2px solid #f4f7fb;
+  box-shadow: 0 0 0 2px #e8f0fe;
+}
+.timeline strong { font-size: 14px; color: #2563eb; }
+.timeline p { font-size: 15px; color: #1f2d3d; margin: 4px 0 0 0; line-height: 1.8; }
+.table { width: 100%; border-collapse: collapse; margin: 0 0 16px 0; font-size: 14px; }
+.table th {
+  background: linear-gradient(180deg, #c9d6f3, #e8f0fe);
+  color: #0f1e33;
+  font-weight: 600;
+  padding: 10px 12px;
+  text-align: left;
+  border: 1px solid #dbe4ef;
+}
+.table td { padding: 10px 12px; border: 1px solid #dbe4ef; color: #1f2d3d; line-height: 1.7; }
+.table tr:nth-child(even) td { background: #f8fafc; }
+.faq-item {
+  margin: 0 0 12px 0;
+  padding: 16px 20px;
+  background: #ffffff;
+  border-radius: 10px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+  border-left: 3px solid #e8f0fe;
+}
+.faq-item .q { font-size: 15px; font-weight: bold; color: #0f1e33; margin: 0 0 6px 0; }
+.faq-item .a { font-size: 15px; color: #1f2d3d; margin: 0; padding-left: 16px; line-height: 1.8; }
+.end_page {
+  margin-top: 24px;
+  padding: 56px 24px;
+  text-align: center;
+  background: linear-gradient(135deg, #c9d6f3 0%, #e8f0fe 100%);
+  border-radius: 16px;
+}
+.end_page h1 { font-size: 28px; color: #0f1e33; margin: 0 0 16px 0; font-weight: 800; }
+.end_page p  { font-size: 15px; color: #5b6b80; margin: 0; line-height: 1.8; }
+@media screen and (max-width: 600px) {
+  body { padding: 16px !important; }
+  h1 { font-size: 22px !important; }
+  h2 { font-size: 18px !important; }
+  h3 { font-size: 16px !important; }
+}
+@media print {
+  body {
+    padding: 0 !important;
+    margin: 0 !important;
+    background: #f4f7fb;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+  body::before { display: none; }
+  .title, .end_page { border-radius: 0; box-shadow: none; }
+  .faq-item, .card { box-shadow: none; border: 1px solid #dbe4ef; }
+  section { break-inside: auto !important; }
+}
+</style>
+</head>
+<body class="mode-explainer" data-palette="ink-blue">
+
+  <section class="title">
+    <h1>邮件分发助手 · 使用说明</h1>
+    <div class="accent-line"></div>
+    <p>按文件名关键字自动把文件分发给对应收件人的邮件工具<br>双击即用 · 无需安装任何环境 · 只读文件绝不改动原件</p>
+    <p style="margin-top:10px; opacity:.85; font-size:13px;">开源工具 · 欢迎反馈与改进</p>
+  </section>
+
+  <aside class="callout" data-variant="tip">
+    <p><strong>开始前先看这一句：</strong>把「邮件分发助手.exe」拷到任意文件夹，双击即可运行。首次使用按「②收件规则 → ③邮箱设置」的顺序配置一次，之后日常只做「①扫描→发送」两步。</p>
+  </aside>
+
+  <h1 class="heading">一、它帮你做什么</h1>
+  <p class="paragraph">你指定若干文件夹，程序扫描里面的文件；只要<strong>文件名里包含某个关键字</strong>，就自动发给该关键字对应的收件人。同一收件人的多个文件默认合并成一封邮件（附件打包）。例如规则里设「临江大学紫金 → 张三」，那么「临江大学紫金2608」「临江大学紫金2609」都会发给张三。</p>
+  <div class="card">
+    <h3>五条安全底线（已内置，无需设置）</h3>
+    <ul class="list">
+      <li><strong>只读不改：</strong>文件只作为附件读取发送，不移动、不重命名、不删除、不修改原件</li>
+      <li><strong>发不出去就不硬发：</strong>文件名匹配不到关键字、或同时匹配到多个不同收件人时，该文件自动停发并列出，绝不乱猜乱发</li>
+      <li><strong>附件超限自动拦截：</strong>单封邮件附件合计超过上限（默认 45MB）直接不发送并记录原因，避免被邮件服务器退信；上限可在「③邮箱设置」页调整</li>
+      <li><strong>每封发送前都有确认：</strong>点「开始发送」会先弹出收件清单让你过目，确认后才真正发出</li>
+      <li><strong>全程留痕：</strong>每次发送（含重发）自动生成「发送清单」Excel，谁收到了什么、哪些没发、失败原因，全部可查可核验</li>
+    </ul>
+  </div>
+
+  <h1 class="heading">二、三步上手</h1>
+  <ol class="timeline">
+    <li>
+      <strong>第一步：设置收件规则（② 收件规则页）</strong>
+      <p>点「新增」，填三样：关键字（如"临江大学紫金"）、收件人姓名、邮箱。人多的可以按「A列=关键字、B列=姓名、C列=邮箱」做成 Excel 用「从Excel导入」一次灌入。录完点「保存规则」。</p>
+    </li>
+    <li>
+      <strong>第二步：设置发件邮箱（③ 邮箱设置页）</strong>
+      <p>填 SMTP 服务器、端口、加密方式、账号、密码/授权码，点「保存设置」，再点「测试连接」验证能通。拿不准参数时见第四节。</p>
+    </li>
+    <li>
+      <strong>第三步：扫描并发送（① 发送页）</strong>
+      <p>「添加文件夹」选中要分发的文件所在目录 → 点「扫描并匹配」 → 核对表格里每个文件的收件人 → 点「开始发送」→ 在确认弹窗里过目收件清单 → 确认。发送完自动弹出「发送清单」文件夹。</p>
+    </li>
+  </ol>
+
+  <h1 class="heading">三、匹配规则（关键）</h1>
+  <h2 class="heading">3.1 长关键字优先</h2>
+  <p class="paragraph">文件名同时含多个关键字时，<strong>最长的关键字说了算</strong>。所以可以放心同时配「临江大学」和「临江大学紫金」：前者只接兜底的活。</p>
+  <table class="table" data-caption="最长关键字优先示例">
+    <thead>
+      <tr><th style="width:14%">已配关键字</th><th style="width:30%">文件名</th><th style="width:26%">命中结果</th><th style="width:30%">发给谁</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>临江大学紫金</td><td>临江大学紫金2608.xlsx</td><td>命中「临江大学紫金」（5字，最长）</td><td>命中该关键字对应的收件人</td></tr>
+      <tr><td>临江大学</td><td>临江大学2607.docx</td><td>只命中「临江大学」</td><td>命中该关键字对应的收件人</td></tr>
+      <tr><td>两个都没配</td><td>随意一个文件.txt</td><td>未匹配</td><td>自动停发，列入待处理清单</td></tr>
+    </tbody>
+  </table>
+
+  <h2 class="heading">3.2 冲突与未匹配：不猜、不硬发</h2>
+  <p class="paragraph">两类文件会被自动停发：一是<strong>未匹配</strong>（不含任何关键字）；二是<strong>冲突</strong>（文件名里两个等长的关键字指向不同的人，比如「项目决算」和「决算清单」都指向不同人）。这些文件会在表格里灰色/红色标出、不发送。处理方式：</p>
+  <ul class="list">
+    <li><strong>选中该行 → 双击或点「手动指定收件人」</strong>：从已有规则里选，或直接填一个邮箱，即可纳入本轮发送；</li>
+    <li>或点「未匹配/冲突文件另存副本」，把这些文件复制到一个文件夹集中处理（只复制，不动原件）。</li>
+  </ul>
+
+  <h2 class="heading">3.3 合并发送与拆分发送</h2>
+  <p class="paragraph">默认「同一收件人的多个文件合并为一封」收件人只收一封、附件打包。取消勾选则每个文件一封。另外「包含子文件夹」勾上后会把子目录里的文件也扫进来。</p>
+  <aside class="callout" data-variant="warning">
+    <p><strong>自动排除项：</strong>WPS/Office 打开文件时产生的「~$」开头锁文件、未下载完成的临时文件，都会被自动跳过，不会被当成附件发出去。此外，exe、bat、cmd、ps1、js、vbs、scr 等可执行/脚本文件也会被自动跳过，防止误发危险文件——如确需发送此类文件，请先压缩打包并改名。</p>
+  </aside>
+
+  <h1 class="heading">四、邮箱设置与参数速查</h1>
+  <p class="paragraph">这套设置一次填好、长期保存。公司内部邮箱的参数请向 IT 确认，或看公司邮箱的「设置/帮助」页。</p>
+  <table class="table" data-caption="加密方式与常用端口对照">
+    <thead>
+      <tr><th style="width:22%">加密方式</th><th style="width:14%">常用端口</th><th style="width:64%">适用情况</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>SSL</td><td>465</td><td>最常见的加密方式，互联网邮箱（QQ/163/腾讯企业邮）多用这个</td></tr>
+      <tr><td>STARTTLS</td><td>587 或 25</td><td>先明文连接再升级加密，部分企业服务器采用</td></tr>
+      <tr><td>none（不加密）</td><td>25</td><td>纯内网邮件中继。此时取消勾选「登录认证」，但必须填写「发件邮箱地址」。⚠ 尽量避免：25 端口为明文传输，账号密码与附件可能被同网段截获，内网若支持 SSL/STARTTLS 请优先使用（程序选中此项时也会弹出黄字提醒）</td></tr>
+    </tbody>
+  </table>
+  <ul class="list">
+    <li><strong>证书校验（三档，默认不校验）：</strong>①不校验——默认，内网自签名/内部 CA 证书直接能用；②校验证书链——验证服务器证书由信任的 CA 签发但不校验主机名，适合内网 CA（用 IP/别名连也不断），若 IT 提供了内部 CA 的 pem 文件可填在「CA证书文件」里；③严格校验——证书链+主机名全验，适合公网邮箱（QQ/163 等）；</li>
+    <li><strong>附件单封上限（MB）：</strong>默认 45，<strong>按邮件实际大小计</strong>（附件 base64 编码后约膨胀 1.37 倍，网关拒收也按这个口径），超限直接拦截不发送并写明原因，调大上限后可点「重发失败项」补发；</li>
+    <li><strong>抄送/密送：</strong>均在设置页填写，分号分隔。密送收件人不会出现在邮件里（对方看不到彼此）；</li>
+    <li><strong>密码/授权码：</strong>很多企业或互联网邮箱不收登录密码，而要用「授权码/客户端专用密码」，在公司邮箱「设置→客户端发信」里生成；详细步骤看下方说明；</li>
+    <li><strong>记住密码：</strong>勾选后密码保存在本机 <strong>Windows 凭据管理器</strong>（加密、不随 config.json 走），公用电脑勿勾；个别环境凭据管理器不可用时程序会自动退回 config.json 明文保存并在界面提示；换电脑需重输一次密码；</li>
+    <li><strong>发件邮箱地址：</strong>多数情况留空即可（=发件账号）；仅当你用域账号登录内部中继、而发件地址与账号不同时才需要填；</li>
+    <li><strong>主题/正文模板：</strong>支持占位符——{姓名} {关键字} {文件数} {文件名}，按需改写；手动指定的收件人未提供姓名时，{姓名} 自动用邮箱前缀；{邮件数}/{附件数} 与 {文件数} 含义相同（均指该封邮件实际发送的附件份数），保留是兼容旧模板，建议统一用 {文件数}；</li>
+    <li><strong>每封间隔：</strong>默认 1 秒，批量较大时可调大，降低被服务器限流的概率。</li>
+  </ul>
+  <div class="card">
+    <h3>客户端专用密码 / 授权码（多数企业邮箱与个人邮箱必看）</h3>
+    <p class="paragraph">很多企业邮箱的<strong>网页登录密码和客户端发信密码不是同一个</strong>：第三方邮件客户端（Foxmail、Outlook、本工具等）必须用「客户端专用密码 / 授权码」，直接填网页密码会报「邮件服务器返回错误 / 账号或密码不正确」。获取方式以你所在公司的邮箱说明为准，通常路径是：</p>
+    <ul class="list">
+      <li>① 登录邮箱<strong>网页版</strong>（不要用客户端）；</li>
+      <li>② 进入「设置」→「密码管理」或「账户安全」（各家邮箱叫法略有差异）；</li>
+      <li>③ 找到「客户端专用密码」「授权码」「应用密码」之类的入口，生成一个；</li>
+      <li>④ 弹出的密码<strong>通常只显示一次</strong>，立即复制保存；忘了就重新生成一个新的；</li>
+      <li>⑤ 回到本工具「③ 邮箱设置」：密码栏粘贴该密码，勾「记住密码」（存入本机凭据管理器，下次不用再输）；</li>
+      <li>⑥ 点「测试连接」出绿灯 → 点「发一封测试邮件」发给自己收一下，确认链路全通。</li>
+    </ul>
+    <p class="paragraph">说明：每个客户端各生成一个专用密码、互不影响；管理页可查看每个客户端的添加/最近使用时间，不需要时随时停用。个人邮箱（QQ/163 等）的授权码在「设置 → POP3/IMAP/SMTP 服务」里生成。</p>
+  </div>
+  <aside class="callout" data-variant="tip">
+    <p><strong>建议的验证顺序（小额测试原则）：</strong>① 点「测试连接」确认能登录 → ② 「发一封测试邮件」发到自己的邮箱确认能收到 → ③ 建一个临时文件夹放几个测试文件、把规则指向自己的邮箱，完整跑一遍扫描→发送流程 → ④ 正式使用。</p>
+  </aside>
+
+  <h1 class="heading">五、常见问题</h1>
+  <div class="faq-item">
+    <p class="q">Q: 双击后被杀毒软件拦截？</p>
+    <p class="a">A: 程序是打包的单一 exe，部分杀软对这类文件会误报。请在杀软里将其加入信任/白名单即可；不会用的同学可以让 IT 协助放行。</p>
+  </div>
+  <div class="faq-item">
+    <p class="q">Q: 提示发送失败怎么办？</p>
+    <p class="a">A: 程序会给出能看懂的原因提示（括号里附技术详情）：密码/授权码不对、服务器地址或端口不对、连接超时、附件超过「单封上限」（到「③邮箱设置」调大后重发）、证书校验失败（内网自签证书把「证书校验」设为不校验）等。改好后点「重发失败项」，只补发失败的那几封；补发结果会完整写入新的发送清单。界面日志同时会自动保存到程序目录的 logs/ 文件夹（按天一个文件），退出程序不丢，事后可查。</p>
+  </div>
+  <div class="faq-item">
+    <p class="q">Q: 发送过程中直接点右上角 × 关窗会怎样？</p>
+    <p class="a">A: 不会静默丢信。程序会弹窗让你选：停止发送并保存进度后退出（已发出的邮件照常写入发送清单）、或等本轮发送完再退出；只有发送不在进行时才直接关。直接拔电源等极端情况无法防护，重要批次建议等清单生成后再关机。</p>
+  </div>
+  <div class="faq-item">
+    <p class="q">Q: 发错了/发重了怎么办？</p>
+    <p class="a">A: 每次发送后自动生成的「发送清单_日期.xlsx」里有每个文件的去向与发送时间（含未发送、失败原因），可先照单核实范围；程序本身不撤回邮件，需人工沟通说明。所以正式发送前务必利用确认弹窗过目收件清单。</p>
+  </div>
+  <div class="faq-item">
+    <p class="q">Q: 配置存在哪？换电脑要重设吗？</p>
+    <p class="a">A: 全部配置（规则、文件夹、邮箱设置）保存在 exe 同目录的 config.json。换电脑时把「exe + config.json」一起拷走即可；勾了「记住密码」的，密码存在本机 Windows 凭据管理器、不随文件走，换电脑后重输一次即可。</p>
+  </div>
+  <div class="faq-item">
+    <p class="q">Q: 想检查这台电脑上程序是否一切正常？</p>
+    <p class="a">A: 在 exe 所在文件夹打开 PowerShell（文件夹空白处 Shift+右键），运行「.\邮件分发助手.exe --selftest」，会在同目录生成 selftest_report.txt 自检报告（16 项全 OK 即正常，含界面、匹配、清单、附件拦截、证书三档、密码保管等检查）。</p>
+  </div>
+  <div class="faq-item">
+    <p class="q">Q: 附件文件正被别人打开占用，发不出去怎么办？</p>
+    <p class="a">A: 点「开始发送」时程序会预先检查每个文件能否读取：读不了的文件会在确认弹窗里明确列出并从邮件中剔除，其余文件照常发送，不会因为一个文件卡住整封邮件。被剔除的文件会进入待补发清单，关闭占用它的程序后点「重发失败项」即可补发。发送清单里也会记录每个文件的去向与具体原因。</p>
+  </div>
+  <div class="faq-item">
+    <p class="q">Q: 中文文件名、特殊符号文件能发吗？</p>
+    <p class="a">A: 能。附件名按国际编码标准封装，主流邮箱客户端（含 Foxmail、Web 邮箱、手机端）均正常显示中文附件名。个别以 =、+ 等符号开头的文件名，发送清单里会加一个「'」前缀防止 Excel 误当公式，属正常防护。</p>
+  </div>
+
+  <section class="title end_page">
+    <h1>先把小流程跑通，再上正式文件</h1>
+    <p>正式发送前，务必用「测试连接 → 测试邮件 → 自己收件试发」三步验证<br>所有改动只发生在你确认过的那一刻</p>
+    <p style="margin-top:10px; opacity:.85; font-size:13px;">邮件分发助手 v1.1.0 · 开源工具 · 欢迎反馈与改进</p>
+  </section>
+
+</body>
+</html>
